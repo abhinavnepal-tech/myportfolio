@@ -1,409 +1,101 @@
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// 3D clay-style bust (three.js). Head follows the cursor.
+(function () {
+  const box = document.getElementById('av3d');
+  if (!box || !window.THREE) return;
+  const T = THREE;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let renderer;
+  try { renderer = new T.WebGLRenderer({ antialias: true, alpha: true }); } catch (e) { return; }
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  box.appendChild(renderer.domElement);
 
-/* ============================================
-   Scroll-driven: nav state, progress bar, side dots
-   ============================================ */
-const navBar = document.getElementById('navBar');
-const scrollProgress = document.getElementById('scrollProgress');
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-link');
-const sideDots = document.querySelectorAll('.side-dot');
+  const scene = new T.Scene();
+  const cam = new T.PerspectiveCamera(30, 1.25, 0.1, 50);
+  cam.position.set(0, -0.7, 9.5);
+  cam.lookAt(0, -0.7, 0);
+  scene.add(new T.AmbientLight(0xffffff, 0.6));
+  const key = new T.DirectionalLight(0xffffff, 0.85); key.position.set(3, 4, 6); scene.add(key);
+  const fill = new T.DirectionalLight(0x9bb0ff, 0.35); fill.position.set(-4, 1, 3); scene.add(fill);
 
-let scrollTicking = false;
+  const mat = (c) => new T.MeshStandardMaterial({ color: c, roughness: 0.7 });
+  const ball = (r, c, s, p, parent) => {
+    const m = new T.Mesh(new T.SphereGeometry(r, 32, 24), mat(c));
+    if (s) m.scale.set(s[0], s[1], s[2]);
+    if (p) m.position.set(p[0], p[1], p[2]);
+    parent.add(m);
+    return m;
+  };
+  const SKIN = 0xe0a577, SHADE = 0xc98a5d, DARK = 0x14110f;
 
-function onScroll() {
-    const scrollTop = window.pageYOffset;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = docHeight > 0 ? scrollTop / docHeight : 0;
+  // body
+  const body = new T.Group(); scene.add(body);
+  ball(1.5, 0xefe3b0, [1.35, 0.7, 0.8], [0, -2.6, -0.1], body);
+  const neck = new T.Mesh(new T.CylinderGeometry(0.42, 0.46, 1.0, 24), mat(SHADE));
+  neck.position.set(0, -1.2, 0); body.add(neck);
+  const collar = new T.Mesh(new T.TorusGeometry(0.5, 0.07, 10, 32), mat(0xd9cc98));
+  collar.rotation.x = Math.PI / 2; collar.position.set(0, -1.55, 0); body.add(collar);
 
-    if (scrollProgress) {
-        scrollProgress.style.transform = `scaleX(${Math.min(progress, 1)})`;
+  // head
+  const head = new T.Group(); scene.add(head);
+  ball(1, SKIN, [0.92, 1.08, 0.95], null, head);
+  ball(0.62, SKIN, [0.95, 0.9, 0.9], [0, -0.62, 0.12], head);
+  [-1, 1].forEach((d) => {
+    ball(0.2, 0xd49665, [0.5, 1, 0.7], [d * 0.9, -0.05, 0], head);                    // ears
+    ball(0.095, 0x1a1210, [1, 0.75, 0.6], [d * 0.33, 0.08, 0.87], head);             // eyes
+    ball(0.1, DARK, [1.15, 0.16, 0.55], [d * 0.33, 0.135, 0.875], head);             // lids
+    const glint = new T.Mesh(new T.SphereGeometry(0.028, 12, 8), new T.MeshBasicMaterial({ color: 0xffffff }));
+    glint.position.set(d * 0.33 + 0.03, 0.11, 0.935); head.add(glint);
+    const brow = ball(0.1, DARK, [2.1, 0.4, 0.5], [d * 0.34, 0.3, 0.85], head);      // brows
+    brow.rotation.z = d < 0 ? 0.08 : -0.08;
+    const mus = ball(0.1, 0x1a1512, [1.5, 0.32, 0.5], [d * 0.14, -0.43, 0.865], head); // mustache
+    mus.rotation.z = d < 0 ? 0.25 : -0.25;
+  });
+  ball(0.14, 0xd4956a, [0.9, 1.1, 1], [0, -0.14, 0.93], head);                        // nose
+  ball(0.2, 0x2a2420, [1, 0.75, 0.6], [0, -0.84, 0.6], head);                         // goatee
+  const smile = new T.Mesh(new T.TorusGeometry(0.17, 0.022, 8, 24, Math.PI * 0.7), mat(0xa5603f));
+  smile.rotation.set(0.45, 0, -Math.PI / 2 - Math.PI * 0.35);
+  smile.position.set(0.02, -0.5, 0.82); head.add(smile);
+
+  // hair: clumps over the top and back, fringe across the forehead
+  let seed = 7;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const tones = [0x14110f, 0x1c1815, 0x26211d];
+  const surf = (x, y) => 0.95 * Math.sqrt(Math.max(0, 1 - (x / 0.92) ** 2 - (y / 1.08) ** 2));
+  [[0, 1, 0.5], [0.45, 6, 0.42], [0.9, 10, 0.4], [1.35, 14, 0.36], [1.75, 16, 0.34]].forEach(([a, n, r], j) => {
+    for (let i = 0; i < n; i++) {
+      const b = (i / n) * Math.PI * 2 + j;
+      const x = 1.04 * 0.92 * Math.sin(a) * Math.cos(b);
+      const y = 1.04 * 1.08 * Math.cos(a);
+      const z = 1.04 * 0.95 * Math.sin(a) * Math.sin(b);
+      if ((j === 3 && z > 0.25) || (j === 4 && z > -0.05)) continue;
+      ball(r * (0.9 + rnd() * 0.3), tones[i % 3], [1, 0.95 + rnd() * 0.2, 1], [x, y, z], head);
     }
+  });
+  [-0.55, -0.28, 0, 0.28, 0.55].forEach((x) =>
+    ball(0.2 + rnd() * 0.05, tones[Math.floor(rnd() * 3)], [1.3, 0.9, 0.9], [x, 0.55, surf(x, 0.55) + 0.04], head));
 
-    if (navBar) {
-        navBar.classList.toggle('scrolled', scrollTop > 40);
-    }
-
-    const headerHeight = navBar ? navBar.offsetHeight : 0;
-    let current = sections[0] ? sections[0].getAttribute('id') : '';
-
-    sections.forEach((section) => {
-        const sectionTop = section.offsetTop - headerHeight - 120;
-        if (scrollTop >= sectionTop) {
-            current = section.getAttribute('id');
-        }
-    });
-
-    navLinks.forEach((link) => {
-        link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
-    });
-
-    sideDots.forEach((dot) => {
-        dot.classList.toggle('active', dot.dataset.target === `#${current}`);
-    });
-
-    scrollTicking = false;
-}
-
-window.addEventListener('scroll', () => {
-    if (!scrollTicking) {
-        requestAnimationFrame(onScroll);
-        scrollTicking = true;
-    }
-});
-onScroll();
-
-/* ============================================
-   Smooth scrolling for in-page links
-   ============================================ */
-document.querySelectorAll('a[href^="#"], .side-dot').forEach((el) => {
-    el.addEventListener('click', function (e) {
-        const targetSelector = this.getAttribute('href') || this.dataset.target;
-        if (!targetSelector) return;
-        const targetEl = document.querySelector(targetSelector);
-        if (!targetEl) return;
-
-        e.preventDefault();
-        const headerHeight = navBar ? navBar.offsetHeight : 0;
-        window.scrollTo({
-            top: targetEl.offsetTop - headerHeight,
-            behavior: prefersReducedMotion ? 'auto' : 'smooth',
-        });
-
-        const navLinksEl = document.getElementById('navLinks');
-        const hamburgerEl = document.getElementById('hamburger');
-        if (navLinksEl && navLinksEl.classList.contains('open')) {
-            navLinksEl.classList.remove('open');
-            hamburgerEl && hamburgerEl.classList.remove('open');
-            hamburgerEl && hamburgerEl.setAttribute('aria-expanded', 'false');
-        }
-    });
-});
-
-/* ============================================
-   Mobile menu toggle
-   ============================================ */
-const hamburger = document.getElementById('hamburger');
-const navLinksPanel = document.getElementById('navLinks');
-
-if (hamburger && navLinksPanel) {
-    hamburger.addEventListener('click', () => {
-        const isOpen = navLinksPanel.classList.toggle('open');
-        hamburger.classList.toggle('open', isOpen);
-        hamburger.setAttribute('aria-expanded', String(isOpen));
-    });
-}
-
-/* ============================================
-   Reveal-on-scroll
-   ============================================ */
-const revealObserver = new IntersectionObserver(
-    (entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('in-view');
-                revealObserver.unobserve(entry.target);
-            }
-        });
-    },
-    { threshold: 0.12, rootMargin: '0px 0px -60px 0px' }
-);
-
-document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
-
-/* ============================================
-   Ambient cursor glow
-   ============================================ */
-const cursorGlow = document.getElementById('cursorGlow');
-
-if (cursorGlow && !prefersReducedMotion) {
-    let targetX = window.innerWidth / 2;
-    let targetY = window.innerHeight / 2;
-    let currentX = targetX;
-    let currentY = targetY;
-
-    window.addEventListener('mousemove', (e) => {
-        targetX = e.clientX;
-        targetY = e.clientY;
-    });
-
-    function animateGlow() {
-        currentX += (targetX - currentX) * 0.12;
-        currentY += (targetY - currentY) * 0.12;
-        cursorGlow.style.transform = `translate(${currentX}px, ${currentY}px) translate(-50%, -50%)`;
-        requestAnimationFrame(animateGlow);
-    }
-    animateGlow();
-}
-
-/* ============================================
-   Magnetic buttons
-   ============================================ */
-if (!prefersReducedMotion) {
-    document.querySelectorAll('.magnetic').forEach((btn) => {
-        btn.addEventListener('mousemove', (e) => {
-            const rect = btn.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            btn.style.transition = 'transform 0.05s linear';
-            btn.style.transform = `translate(${x * 0.22}px, ${y * 0.35}px)`;
-        });
-
-        btn.addEventListener('mouseleave', () => {
-            btn.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
-            btn.style.transform = 'translate(0, 0)';
-        });
-    });
-}
-
-/* ============================================
-   3D tilt + spotlight for project cards
-   ============================================ */
-if (!prefersReducedMotion) {
-    document.querySelectorAll('.project-card').forEach((card) => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const px = (e.clientX - rect.left) / rect.width;
-            const py = (e.clientY - rect.top) / rect.height;
-
-            const rotateX = (0.5 - py) * 8;
-            const rotateY = (px - 0.5) * 10;
-
-            card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(4px)`;
-            card.style.setProperty('--mx', `${px * 100}%`);
-            card.style.setProperty('--my', `${py * 100}%`);
-        });
-
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(900px) rotateX(0) rotateY(0) translateZ(0)';
-        });
-    });
-}
-
-/* ============================================
-   Animated stat counters
-   ============================================ */
-const statNumbers = document.querySelectorAll('.stat-number');
-
-const counterObserver = new IntersectionObserver(
-    (entries) => {
-        entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            const el = entry.target;
-            const target = parseInt(el.dataset.target, 10) || 0;
-            const suffix = el.dataset.suffix || '';
-            const duration = 1200;
-            const start = performance.now();
-
-            function step(now) {
-                const progress = Math.min((now - start) / duration, 1);
-                const eased = 1 - Math.pow(1 - progress, 3);
-                el.textContent = Math.round(eased * target) + suffix;
-                if (progress < 1) requestAnimationFrame(step);
-            }
-
-            if (prefersReducedMotion) {
-                el.textContent = target + suffix;
-            } else {
-                requestAnimationFrame(step);
-            }
-
-            counterObserver.unobserve(el);
-        });
-    },
-    { threshold: 0.4 }
-);
-
-statNumbers.forEach((el) => counterObserver.observe(el));
-
-/* ============================================
-   Skill progress rings
-   ============================================ */
-const RING_CIRCUMFERENCE = 213.6;
-
-const skillObserver = new IntersectionObserver(
-    (entries) => {
-        entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            const card = entry.target;
-            const percent = parseFloat(card.dataset.percent);
-            const ring = card.querySelector('.ring-progress');
-            if (ring && !isNaN(percent)) {
-                const offset = RING_CIRCUMFERENCE - (percent / 100) * RING_CIRCUMFERENCE;
-                requestAnimationFrame(() => {
-                    ring.style.strokeDashoffset = offset;
-                });
-            }
-            skillObserver.unobserve(card);
-        });
-    },
-    { threshold: 0.3 }
-);
-
-document.querySelectorAll('.skill-card[data-percent]').forEach((el) => skillObserver.observe(el));
-
-/* ============================================
-   Project filter
-   ============================================ */
-const filterButtons = document.querySelectorAll('.filter-btn');
-const projectCards = document.querySelectorAll('.project-card');
-
-filterButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-        filterButtons.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        const filter = btn.dataset.filter;
-        projectCards.forEach((card) => {
-            const matches = filter === 'all' || card.dataset.category === filter;
-            card.classList.toggle('filtered-out', !matches);
-        });
-    });
-});
-
-/* ============================================
-   Click-to-copy contact cards
-   ============================================ */
-const toast = document.getElementById('toast');
-let toastTimeout;
-
-function showToast(message) {
-    if (!toast) return;
-    toast.textContent = message;
-    toast.classList.add('show');
-    clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => toast.classList.remove('show'), 2200);
-}
-
-document.querySelectorAll('[data-copy]').forEach((btn) => {
-    btn.addEventListener('click', async () => {
-        const value = btn.dataset.copy;
-        try {
-            await navigator.clipboard.writeText(value);
-            showToast(`Copied "${value}" to clipboard`);
-        } catch (err) {
-            showToast('Could not copy — please copy manually');
-        }
-    });
-});
-
-/* ============================================
-   Hero particle network
-   ============================================ */
-(function initParticleNetwork() {
-    const canvas = document.getElementById('particleCanvas');
-    const hero = document.getElementById('top');
-    if (!canvas || !hero) return;
-
-    const ctx = canvas.getContext('2d');
-    let width, height, particles, mouse = { x: null, y: null };
-    let animationId;
-
-    const LATTE = '232, 187, 141';
-    const LINK_DIST = 130;
-    const MOUSE_DIST = 160;
-
-    function resize() {
-        width = canvas.width = hero.clientWidth;
-        height = canvas.height = hero.clientHeight;
-    }
-
-    function createParticles() {
-        const count = Math.min(80, Math.max(28, Math.floor((width * height) / 16000)));
-        particles = Array.from({ length: count }, () => ({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            vx: (Math.random() - 0.5) * 0.35,
-            vy: (Math.random() - 0.5) * 0.35,
-            r: Math.random() * 1.6 + 0.8,
-        }));
-    }
-
-    function step() {
-        ctx.clearRect(0, 0, width, height);
-
-        particles.forEach((p) => {
-            p.x += p.vx;
-            p.y += p.vy;
-
-            if (p.x < 0 || p.x > width) p.vx *= -1;
-            if (p.y < 0 || p.y > height) p.vy *= -1;
-
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${LATTE}, 0.55)`;
-            ctx.fill();
-        });
-
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < LINK_DIST) {
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(${LATTE}, ${0.18 * (1 - dist / LINK_DIST)})`;
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                }
-            }
-
-            if (mouse.x !== null) {
-                const dx = particles[i].x - mouse.x;
-                const dy = particles[i].y - mouse.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < MOUSE_DIST) {
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(mouse.x, mouse.y);
-                    ctx.strokeStyle = `rgba(${LATTE}, ${0.35 * (1 - dist / MOUSE_DIST)})`;
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                }
-            }
-        }
-
-        animationId = requestAnimationFrame(step);
-    }
-
-    function drawStaticFrame() {
-        ctx.clearRect(0, 0, width, height);
-        particles.forEach((p) => {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${LATTE}, 0.4)`;
-            ctx.fill();
-        });
-    }
-
-    resize();
-    createParticles();
-
-    if (prefersReducedMotion) {
-        drawStaticFrame();
-    } else {
-        step();
-
-        hero.addEventListener('mousemove', (e) => {
-            const rect = hero.getBoundingClientRect();
-            mouse.x = e.clientX - rect.left;
-            mouse.y = e.clientY - rect.top;
-        });
-
-        hero.addEventListener('mouseleave', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
-    }
-
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            resize();
-            createParticles();
-        }, 200);
-    });
+  // sizing, interaction, loop
+  const fit = () => { const w = box.clientWidth; renderer.setSize(w, w * 0.8, false); };
+  fit();
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(box);
+  let tx = 0.3, ty = 0, cx = 0, cy = 0, visible = true;
+  if (!reduce) addEventListener('pointermove', (e) => {
+    tx = (e.clientX / innerWidth - 0.5) * 2;
+    ty = (e.clientY / innerHeight - 0.5) * 2;
+  });
+  if (window.IntersectionObserver) new IntersectionObserver((e) => { visible = e[0].isIntersecting; }).observe(box);
+  const clock = new T.Clock();
+  (function loop() {
+    requestAnimationFrame(loop);
+    if (!visible) return;
+    const t = clock.getElapsedTime();
+    cx += (tx - cx) * 0.07; cy += (ty - cy) * 0.07;
+    head.rotation.y = reduce ? 0.2 : cx * 0.55;
+    head.rotation.x = reduce ? 0 : cy * 0.3;
+    head.rotation.z = reduce ? 0 : Math.sin(t * 1.2) * 0.02;
+    head.position.y = reduce ? 0 : Math.sin(t * 1.6) * 0.025;
+    renderer.render(scene, cam);
+  })();
 })();
+
+console.log('Hand-written, so if something is broken, it is my fault.');

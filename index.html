@@ -1,347 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abhinav Nepal — Web Developer</title>
-    <meta name="description" content="Self-taught front-end developer and SEO specialist building responsive, high-performing websites.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abhinav Nepal | Web Developer</title>
+<meta name="description" content="Self-taught full stack developer and SEO specialist building fast, responsive websites that work.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232b3dff'/%3E%3Ctext x='16' y='23' font-family='Arial' font-weight='700' font-size='18' text-anchor='middle' fill='white'%3EA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<script>
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
-    <!-- Ambient cursor glow (decorative, desktop only) -->
-    <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
-
-    <!-- Scroll progress -->
-    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-
-    <!-- Side scroll-spy nav (desktop only) -->
-    <nav class="side-nav" id="sideNav" aria-label="Section shortcuts">
-        <button class="side-dot active" data-target="#top" aria-label="Home"><span class="side-tip">Home</span></button>
-        <button class="side-dot" data-target="#about" aria-label="About"><span class="side-tip">About</span></button>
-        <button class="side-dot" data-target="#projects" aria-label="Projects"><span class="side-tip">Projects</span></button>
-        <button class="side-dot" data-target="#skills" aria-label="Skills"><span class="side-tip">Skills</span></button>
-        <button class="side-dot" data-target="#contact" aria-label="Contact"><span class="side-tip">Contact</span></button>
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" href="#top">Abhinav Nepal</a>
+    <nav aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <a class="btn solid sm" href="hey.pdf" target="_blank" rel="noopener">View resume</a>
     </nav>
+  </div>
+</header>
 
-    <!-- Top nav -->
-    <header class="nav-bar" id="navBar">
-        <div class="container nav-inner">
-            <a href="#top" class="brand">Abhinav Nepal</a>
+<main id="top">
+  <section class="hero wrap">
+    <div>
+      <h1>Abhinav Nepal</h1>
+      <p class="lede">I'm a full-stack dev who spends way too much time breaking my own code just to see how it works. Reliable backends, managing databases, and shipping code to production.</p>
+      <p class="actions">
+        <a class="btn solid" href="#work">See my work</a>
+        <a class="btn" href="#contact">Get in touch</a>
+      </p>
+      <ul class="socials">
+        <li><a href="https://github.com/abhinavnepal-tech?tab=repositories" target="_blank" rel="noopener" style="--ic:#30363d">
+          <span class="ico"><i class="fa-brands fa-github"></i></span>
+          <span class="txt"><b>GitHub</b><small>abhinavnepal-tech</small></span></a></li>
+        <li><a href="https://www.linkedin.com/in/abhinav-nepal-0206a7366" target="_blank" rel="noopener" style="--ic:#0a66c2">
+          <span class="ico"><i class="fa-brands fa-linkedin-in"></i></span>
+          <span class="txt"><b>LinkedIn</b><small>abhinav-nepal</small></span></a></li>
+        <li><a href="https://wa.me/9779768535232?text=Hey%20Abhinav" target="_blank" rel="noopener" style="--ic:#25d366">
+          <span class="ico"><i class="fa-brands fa-whatsapp"></i></span>
+          <span class="txt"><b>WhatsApp</b><small>Message me</small></span></a></li>
+        <li><a href="mailto:abhinavnepal7@gmail.com" style="--ic:#2b3dff">
+          <span class="ico"><i class="fa-solid fa-envelope"></i></span>
+          <span class="txt"><b>Email</b><small>abhinavnepal7@gmail.com</small></span></a></li>
+      </ul>
+    </div>
 
-            <nav class="nav-links" id="navLinks">
-                <a href="#about" class="nav-link">About</a>
-                <a href="#projects" class="nav-link">Projects</a>
-                <a href="#skills" class="nav-link">Skills</a>
-                <a href="#contact" class="nav-link">Contact</a>
-                <a href="https://wa.me/9779768535232?text=Hey%20Abhinav" class="btn btn-primary btn-sm magnetic nav-cta" target="_blank" rel="noopener">Say hello</a>
-            </nav>
+    <aside class="profile" aria-label="At a glance">
+      <div class="who">
+        <div class="av" id="av3d" role="img" aria-label="3D illustration of Abhinav Nepal"></div>
+        <div><strong>Abhinav Nepal</strong><span>Full stack developer</span></div>
+      </div>
+      <dl>  
+        <dt>Stack</dt><dd>HTML, CSS, JavaScript, Python, PostgreSQL, TypeScript, Flask, React, MongoDB, Node.js, Express.js</dd>
+        <dt>Tools</dt><dd>Git, Vercel, Cloudflare, alwaysdata, pythonanywhere, supabase</dd>
+        <dt>Status</dt><dd>Available for freelance work</dd>
+      </dl>
+      <a class="btn solid wide" href="hey.pdf" download>Download resume</a>
+    </aside>
+  </section>
 
-            <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
-                <span></span><span></span><span></span>
-            </button>
-        </div>
-    </header>
+  <section class="wrap sec" id="work">
+    <h2 class="sh">Selected work</h2>
+    <div class="grid">
+      <a class="proj" style="--c:#1f6f5c" href="https://winsomelifesciences.com" target="_blank" rel="noopener">
+        <div class="shot"><div class="chrome"><i></i><i></i><i></i><span>winsomelifesciences.com</span></div><div class="page"><b>Skincare brand</b><u></u><u></u></div></div>
+        <div class="pbody"><h3>Skincare Brand Site</h3>
+          <p>Fully responsive site built with HTML, CSS and JavaScript, SEO optimized and connected to Google Search Console. Designed for conversion as much as looks</p>
+          <span class="go">Visit site</span></div>
+      </a>
+      <a class="proj" style="--c:#3a3fd1" href="https://to-do-list-abhinav-nepals-projects.vercel.app" target="_blank" rel="noopener">
+        <div class="shot"><div class="chrome"><i></i><i></i><i></i><span>to-do-list site</span></div><div class="page"><b>To-Do List</b><u></u><u></u></div></div>
+        <div class="pbody"><h3>To-Do List</h3>
+          <p>A lightweight task manager built with HTML, CSS and JavaScript. Add, complete, delete and filter tasks, and progress saves locally so your list survives a refresh</p>
+          <span class="go">Visit site</span></div>
+      </a>
+      <a class="proj" style="--c:#b8532a" href="https://abhinav.alwaysdata.net" target="_blank" rel="noopener">
+        <div class="shot"><div class="chrome"><i></i><i></i><i></i><span>Hardware Store</span></div><div class="page"><b>Hardware store</b><u></u><u></u></div></div>
+        <div class="pbody"><h3>Hardware Site</h3>
+          <p>A enterprise-level site with fully functioning CRUD features. Python, Flask and SQLAlchemy. Pushed to github and deployed through alwaysdata</p>
+          <span class="go">Visit site</span></div>
+      </a>
+    </div>
+  </section>
 
-    <!-- Hero -->
-    <section class="hero" id="top">
-        <canvas class="hero-canvas" id="particleCanvas" aria-hidden="true"></canvas>
-        <div class="container hero-inner">
-            <span class="badge-pill">
-                <span class="pulse-dot" aria-hidden="true"></span>
-                Available for freelance work
-            </span>
+  <section class="wrap sec two" id="about">
+    <div>
+      <h2 class="sh">About</h2>
+      <p class="copy">Full-stack developer specializing in the MERN stack, TypeScript, Python, and Flask, with hands-on experience using MongoDB and SQLAlchemy for database design</p>
+      <p class="copy dim">I like to break my own code to see how far it can go. I rely heavily on documentation, trial-and-error, and real-world execution to build a stronger foundation for my codes</p>
+    </div>
+    <div>
+      <h2 class="sh">Skills</h2>
+      <div class="cols">
+        <div>
+  <h3>Frontend</h3>
+  <ul>
+    <li>HTML & CSS</li>
+    <li>JavaScript</li>
+    <li>TypeScript</li>
+    <li>React</li>
+  </ul>
+</div>
 
-            <h1 class="hero-title">
-                Building fast, findable<br>
-                websites that <span class="highlight">work</span>.
-            </h1>
+<div>
+  <h3>Backend</h3>
+  <ul>
+    <li>Node.js & Express (MERN Stack)</li>
+    <li>Python & Flask</li>
+    <li>MongoDB</li>
+    <li>SQLAlchemy</li>
+  </ul>
+</div>
 
-            <p class="hero-sub">
-                I'm Abhinav Nepal — a self-taught full stack developer and SEO enthusiast
-                who turns ideas into responsive, scalable sites.
-            </p>
+<div>
+  <h3>Shipping & Hosting</h3>
+  <ul>
+    <li>Git & GitHub</li>
+    <li>Vercel</li>
+    <li>Cloudflare</li>
+    <li>PythonAnywhere</li>
+    <li>AlwaysData</li>
+    <li>Render & Neon</li>
+  </ul>
+</div>
+      </div>
+      <p class="note">Not proud of it tho😛still much more to learn!</p>
+    </div>
+  </section>
 
-            <div class="hero-actions">
-                <a href="#projects" class="btn btn-primary btn-lg magnetic">
-                    View my work
-                    <svg class="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </a>
-                <a href="#contact" class="btn btn-ghost btn-lg magnetic">Get in touch</a>
-            </div>
+  <section class="wrap sec" id="contact">
+    <div class="cta">
+      <h2 class="big">Let's build something great</h2>
+      <p>Tell me about your project. I reply to every message, and would love to be a part of bringing your ideas to life.</p>
+      <a class="mail" href="mailto:abhinavnepal7@gmail.com">abhinavnepal7@gmail.com</a>
+      <ul class="links">
+        
+<li>
+  <a href="https://wa.me/9779768535232?text=Hey%20Abhinav"
+     target="_blank" rel="noopener">
+    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+  </a>
+</li>
 
-            <ul class="tech-strip" aria-label="Core technologies">
-                <li class="tech-pill">HTML & CSS</li>
-                <li class="tech-pill">Python</li>
-                <li class="tech-pill">JavaScript</li>
-                <li class="tech-pill">PostgreSQL</li>
-                <li class="tech-pill">Shipping & Production</li>
-            </ul>
-        </div>
+<li>
+  <a href="tel:+9779768535232">
+    <i class="fa-solid fa-phone"></i> +977-9768535232
+  </a>
+</li>
 
-        <a href="#about" class="scroll-cue" aria-label="Scroll to about section">
-            <span class="scroll-cue-track"><span class="scroll-cue-dot"></span></span>
-            Scroll
-        </a>
-    </section>
+<li>
+  <a href="https://www.linkedin.com/in/abhinav-nepal-0206a7366"
+     target="_blank" rel="noopener">
+    <i class="fa-brands fa-linkedin"></i> LinkedIn
+  </a>
+</li>
 
-    <!-- About -->
-    <section id="about" class="section">
-        <div class="container about-grid">
-            <div class="about-copy reveal">
-                <span class="eyebrow">About me</span>
-                <h2 class="section-title">A developer who thinks like a marketer.</h2>
-                <p>
-                    I'm a student with full stack development skills and an SEO
-                    enthusiast, with hands-on experience building responsive, optimized
-                    websites using HTML, CSS, Python, and JavaScript. I care about clean UX,
-                    performance, and making sure the sites I build actually get found.
-                </p>
-            </div>
+<li>
+  <a href="https://github.com/abhinavnepal-tech?tab=repositories"
+     target="_blank" rel="noopener">
+    <i class="fa-brands fa-github"></i> GitHub
+  </a>
+</li>
 
-            <div class="about-stats">
-                <div class="stat-card reveal">
-                    <span class="stat-number" data-target="3" data-suffix="+"></span>
-                    <span class="stat-label">Projects deployed</span>
-                </div>
-                <div class="stat-card reveal">
-                    <span class="stat-number" data-target="10" data-suffix="+">0</span>
-                    <span class="stat-label">Skills used</span>
-                </div>
-                <div class="stat-card reveal">
-                    <span class="stat-number" data-target="100" data-suffix="%">0</span>
-                    <span class="stat-label">Satisfaction rate</span>
-                </div>
-            </div>
-        </div>
-    </section>
+<li>
+  <a href="hey.pdf" download>
+    <i class="fa-solid fa-file-pdf"></i> Resume
+  </a>
+</li>
 
-    <!-- Projects -->
-    <section id="projects" class="section">
-        <div class="container">
-            <div class="section-header reveal">
-                <span class="eyebrow">Selected work</span>
-                <h2 class="section-title">Projects</h2>
-            </div>
+      </ul>
+    </div>
+  </section>
+</main>
 
-            <div class="filter-bar reveal" role="tablist" aria-label="Filter projects">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="client">Client Sites</button>
-                <button class="filter-btn" data-filter="tool">Tools</button>
-            </div>
+<footer class="foot wrap">
+  <span>© 2026 Abhinav Nepal</span>
+  <span>Written by ❤️ in HTML, CSS and JavaScript.</span>
+</footer>
 
-            <div class="projects-grid" id="projectsGrid">
-                <article class="project-card reveal" data-category="client">
-                    <div class="card-spotlight" aria-hidden="true"></div>
-                    <div class="project-icon">🧴</div>
-                    <div class="project-tags">
-                        <span>E-commerce</span><span>Brand</span>
-                    </div>
-                    <h3 class="project-title">Skincare Brand Site</h3>
-                    <p class="project-description">
-                        Fully responsive site built with HTML, CSS and JavaScript, SEO
-                        optimized and connected to Google Search Console. Designed for
-                        conversion as much as looks.
-                    </p>
-                    <div class="project-footer">
-                        <a href="https://winsomelifesciences.com" class="project-link" target="_blank" rel="noopener">
-                            Visit site
-                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </a>
-                        <span class="project-meta">SEO optimized</span>
-                    </div>
-                </article>
-
-                <article class="project-card reveal" data-category="tool">
-                    <div class="card-spotlight" aria-hidden="true"></div>
-                    <div class="project-icon">📃</div>
-                    <div class="project-tags">
-                        <span>Tool</span><span>Minimal</span>
-                    </div>
-                    <h3 class="project-title">To-Do List</h3>
-                    <p class="project-description">
-                        A lightweight task manager built with HTML, CSS and JavaScript.
-                        Add, complete, delete, and filter tasks — progress saves locally,
-                        so your list survives a refresh.
-                    </p>
-                    <div class="project-footer">
-                        <a href="https://to-do-list-abhinav-nepals-projects.vercel.app" class="project-link" target="_blank" rel="noopener">
-                            Visit site
-                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </a>
-                        <span class="project-meta">Clean UI</span>
-                    </div>
-                </article>
-
-                <article class="project-card reveal" data-category="client">
-                    <div class="card-spotlight" aria-hidden="true"></div>
-                    <div class="project-icon">🔧</div>
-                    <div class="project-tags">
-                        <span>Brand</span><span>Showcase</span>
-                    </div>
-                    <h3 class="project-title">Hardware Site</h3>
-                    <p class="project-description">
-                        Fully responsive site built with HTML, CSS and JavaScript, SEO
-                        optimized and connected to Google Search Console. Modern design
-                        focused on usability.
-                    </p>
-                    <div class="project-footer">
-                        <a href="https://hardwarepasale.com" class="project-link" target="_blank" rel="noopener">
-                            Visit site
-                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </a>
-                        <span class="project-meta">Easy access</span>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <!-- Skills -->
-    <section id="skills" class="section">
-        <div class="container">
-            <div class="section-header reveal">
-                <span class="eyebrow">Toolkit</span>
-                <h2 class="section-title">Skills &amp; Tools</h2>
-            </div>
-
-            <div class="skills-grid">
-                <!-- Each ring: r=34, circumference ≈ 213.6 -->
-                <div class="skill-card reveal" data-percent="95">
-                    <div class="skill-ring">
-                        <svg viewBox="0 0 80 80"><circle class="ring-track" cx="40" cy="40" r="34"/><circle class="ring-progress" cx="40" cy="40" r="34"/></svg>
-                        <span class="ring-icon" aria-hidden="true">🌐</span>
-                    </div>
-                    <div class="skill-name">HTML</div>
-                  
-                </div>
-
-
-
-                <div class="skill-card reveal" data-percent="80">
-                    <div class="skill-ring">
-                        <svg viewBox="0 0 80 80"><circle class="ring-track" cx="40" cy="40" r="34"/><circle class="ring-progress" cx="40" cy="40" r="34"/></svg>
-                        <span class="ring-icon" aria-hidden="true">⚡</span>
-                    </div>
-                    <div class="skill-name">JavaScript</div>
-                
-                </div>
-
-                <div class="skill-card reveal" data-percent="60">
-                    <div class="skill-ring">
-                        <svg viewBox="0 0 80 80"><circle class="ring-track" cx="40" cy="40" r="34"/><circle class="ring-progress" cx="40" cy="40" r="34"/></svg>
-                        <span class="ring-icon" aria-hidden="true">📱</span>
-                    </div>
-                    <div class="skill-name">Python</div>
-
-                </div>
-                                <div class="skill-card reveal" data-percent="65">
-                    <div class="skill-ring">
-                        <svg viewBox="0 0 80 80"><circle class="ring-track" cx="40" cy="40" r="34"/><circle class="ring-progress" cx="40" cy="40" r="34"/></svg>
-                        <span class="ring-icon" aria-hidden="true">🚀</span>
-                    </div>
-                    <div class="skill-name">Git &amp; GitHub</div>
-
-                </div>    
-                <div class="skill-card reveal" data-percent="96">
-                    <div class="skill-ring">
-                        <svg viewBox="0 0 80 80"><circle class="ring-track" cx="40" cy="40" r="34"/><circle class="ring-progress" cx="40" cy="40" r="34"/></svg>
-                        <span class="ring-icon" aria-hidden="true">🔍</span>
-                    </div>
-                    <div class="skill-name">SEO</div>
-
-                </div>
-
-            
-                <div class="skill-card reveal" data-percent="65">
-                    <div class="skill-ring">
-                        <svg viewBox="0 0 80 80"><circle class="ring-track" cx="40" cy="40" r="34"/><circle class="ring-progress" cx="40" cy="40" r="34"/></svg>
-                        <span class="ring-icon" aria-hidden="true">📈</span>
-                    </div>
-                    <div class="skill-name">SEMrush</div>
-
-                </div>
-
-                <div class="skill-card reveal" data-percent="65">
-                    <div class="skill-ring">
-                        <svg viewBox="0 0 80 80"><circle class="ring-track" cx="40" cy="40" r="34"/><circle class="ring-progress" cx="40" cy="40" r="34"/></svg>
-                        <span class="ring-icon" aria-hidden="true">🚀</span>
-                    </div>
-                    <div class="skill-name">Git &amp; GitHub</div>
-
-                </div>
-
-                <div class="skill-card reveal" data-percent="85">
-                    <div class="skill-ring">
-                        <svg viewBox="0 0 80 80"><circle class="ring-track" cx="40" cy="40" r="34"/><circle class="ring-progress" cx="40" cy="40" r="34"/></svg>
-                        <span class="ring-icon" aria-hidden="true">☁️</span>
-                    </div>
-                    <div class="skill-name">Vercel</div>
-
-                </div>
-            </div>            
-    <!-- Contact -->
-    <section id="contact" class="section contact-section">
-        <div class="container contact-inner">
-            <span class="eyebrow reveal">Get in touch</span>
-            <h2 class="section-title reveal">Let's build something great.</h2>
-            <p class="reveal">
-                Ready to bring your vision to life? Let's discuss your next project.
-            </p>
-
-            <a href="mailto:abhinavnepal7@gmail.com" class="btn btn-primary btn-lg magnetic reveal">
-                Say hello
-                <svg class="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-
-            <div class="contact-grid">
-                <a class="contact-card reveal" href="mailto:abhinavnepal7@gmail.com">
-                    <span class="contact-icon" aria-hidden="true">📧</span>
-                    <span class="contact-label">Email</span>
-                    <span class="contact-value">abhinavnepal7@gmail.com</span>
-                    <span class="contact-hint">Send an email →</span>
-                </a>
-
-                <a class="contact-card reveal" href="tel:+9779768535232">
-                    <span class="contact-icon" aria-hidden="true">📱</span>
-                    <span class="contact-label">Phone</span>
-                    <span class="contact-value">+977-9768535232</span>
-                    <span class="contact-hint">Tap to call →</span>
-                </a>
-
-                <a class="contact-card reveal" href="https://www.linkedin.com/in/abhinav-nepal-0206a7366" target="_blank" rel="noopener">
-                    <span class="contact-icon" aria-hidden="true">🏢</span>
-                    <span class="contact-label">LinkedIn</span>
-                    <span class="contact-value">Check profile</span>
-                    <span class="contact-hint">Open profile →</span>
-                </a>
-
-                <a class="contact-card reveal" href="https://github.com/abhinavnepal-tech?tab=repositories" target="_blank" rel="noopener">
-                    <span class="contact-icon" aria-hidden="true">🧑‍💻</span>
-                    <span class="contact-label">GitHub</span>
-                    <span class="contact-value">abhinavnepal</span>
-                    <span class="contact-hint">View repos →</span>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container footer-inner">
-            <span>© 2026 Abhinav Nepal</span>
-            <a href="#top" class="footer-top">Back to top ↑</a>
-        </div>
-    </footer>
-
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-    <script src="script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
